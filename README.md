@@ -1,8 +1,13 @@
 # glass-to-glass-latency
 
-A small hardware rig to measure the local glass-to-glass latency of the teleop video path: from light entering the RealSense lens to light leaving the Vive headset display. Built for the [teleop-avatar](https://github.com/AlexanderWegenerRobotics/teleop-avatar) streaming pipeline, but it treats the system as a black box, so it works for any camera → display chain.
-
-<img src="docs/setup.jpg" width="420" alt="Rig setup">
+<table>
+<tr>
+<td width="55%">
+A small hardware rig to measure the local glass-to-glass latency of the teleop video path: from light entering the RealSense lens to light leaving the Vive headset display. Built for the <a href="https://github.com/AlexanderWegenerRobotics/teleop-avatar">teleop-avatar</a> streaming pipeline, but it treats the system as a black box, so it works for any camera → display chain.
+</td>
+<td width="45%"><img src="docs/setup.jpg" width="340" alt="Rig setup"></td>
+</tr>
+</table>
 
 ---
 
@@ -27,15 +32,21 @@ One sample per 0.4–0.8 s (random gap so the LED doesn't phase-lock to the came
 
 <img src="docs/wiring.png" width="560" alt="Wiring">
 
-| Arduino | Goes to |
-|---|---|
-| 5V | TEMT6000 V |
-| GND | TEMT6000 G |
-| A0 | TEMT6000 S |
-| D7 | 220 Ω → LED long leg |
-| GND | LED short leg |
-
-<img src="docs/sensor_on_lens.jpg" width="240" alt="Sensor taped on the headset lens">
+<table>
+<tr>
+<td valign="top">
+<table>
+<tr><th>Arduino</th><th>Goes to</th></tr>
+<tr><td>5V</td><td>TEMT6000 V</td></tr>
+<tr><td>GND</td><td>TEMT6000 G</td></tr>
+<tr><td>A0</td><td>TEMT6000 S</td></tr>
+<tr><td>D7</td><td>220 Ω → LED long leg</td></tr>
+<tr><td>GND</td><td>LED short leg</td></tr>
+</table>
+</td>
+<td><img src="docs/sensor_on_lens.jpg" width="230" alt="Sensor taped on the headset lens"><br><sub>Sensor taped on the lens</sub></td>
+</tr>
+</table>
 
 ---
 
