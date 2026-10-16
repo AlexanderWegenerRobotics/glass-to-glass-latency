@@ -2,7 +2,7 @@
 
 A small hardware rig to measure the local glass-to-glass latency of the teleop video path: from light entering the RealSense lens to light leaving the Vive headset display. Built for the [teleop-avatar](https://github.com/AlexanderWegenerRobotics/teleop-avatar) streaming pipeline, but it treats the system as a black box, so it works for any camera → display chain.
 
-![Rig setup](docs/setup.jpg)
+<img src="docs/setup.jpg" width="420" alt="Rig setup">
 
 ---
 
@@ -10,7 +10,7 @@ A small hardware rig to measure the local glass-to-glass latency of the teleop v
 
 An Arduino turns on an LED in front of the camera (t0). The frame goes through the normal pipeline: capture, encode, RTP, decode, Unreal, headset. A light sensor taped on the headset lens sees the display get brighter (t1). The Arduino measures t1 − t0 with its own clock, so there's no clock sync involved and the USB/serial link to the PC doesn't add to the number, it only carries the result afterwards.
 
-![Concept](docs/concept.png)
+<img src="docs/concept.png" width="640" alt="Concept">
 
 One sample per 0.4–0.8 s (random gap so the LED doesn't phase-lock to the camera frame clock). A run of ~500 samples takes about 8 minutes.
 
@@ -25,7 +25,7 @@ One sample per 0.4–0.8 s (random gap so the LED doesn't phase-lock to the came
 | Green 5 mm LED + 220 Ω | green because both the sensor and the camera are most sensitive to it |
 | Jumper wires, black tape | tape also goes over the headset proximity sensor so the display stays on |
 
-![Wiring](docs/wiring.png)
+<img src="docs/wiring.png" width="560" alt="Wiring">
 
 | Arduino | Goes to |
 |---|---|
@@ -35,7 +35,7 @@ One sample per 0.4–0.8 s (random gap so the LED doesn't phase-lock to the came
 | D7 | 220 Ω → LED long leg |
 | GND | LED short leg |
 
-<img src="docs/sensor_on_lens.jpg" width="320" alt="Sensor taped on the headset lens">
+<img src="docs/sensor_on_lens.jpg" width="240" alt="Sensor taped on the headset lens">
 
 ---
 
