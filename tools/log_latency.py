@@ -2,9 +2,10 @@
 
 Usage:
     python log_latency.py <serial_port> <out.csv> [--label "jb20 d455 30fps"]
-                          [--min-ms 40] [--summary results_summary.csv]
+                          [--samples 400] [--min-ms 40] [--summary results_summary.csv]
 
-Each run writes its raw samples to <out.csv>. On Ctrl-C the summary (median, p5,
+Each run writes its raw samples to <out.csv>. After --samples valid samples (or on
+Ctrl-C) the summary (median, p5,
 p95, ...) is printed and appended as one row to the summary CSV, together with the
 label, so runs with different settings (jitter buffer, fps, exposure, camera) end
 up side by side in one table.
@@ -75,8 +76,12 @@ def main():
     ap.add_argument("out", help="raw sample CSV for this run")
     ap.add_argument("--label", default="", help="settings of this run, e.g. 'jb20 d455 30fps exp100'")
     ap.add_argument("--min-ms", type=float, default=40.0, help="reject samples below this (default 40)")
+    ap.add_argument("--samples", type=int, default=400, help="stop after this many valid samples (default 400, 0 = run until Ctrl-C)")
     ap.add_argument("--summary", default="results_summary.csv", help="shared summary CSV (default results_summary.csv)")
     args = ap.parse_args()
+    for path in (args.out, args.summary):
+        if os.path.dirname(path):
+            os.makedirs(os.path.dirname(path), exist_ok=True)
 
     ser = serial.Serial(args.port, 115200, timeout=2)
     lat_ms, timeouts, rejects = [], 0, 0
@@ -119,10 +124,14 @@ def main():
                     continue
                 lat_ms.append(ms)
                 print(f"{idx}: {ms:.1f} ms  (running median {statistics.median(lat_ms):.1f})")
+                if args.samples and len(lat_ms) >= args.samples:
+                    print(f"reached {args.samples} samples, stopping")
+                    break
         except KeyboardInterrupt:
-            s = summarize(lat_ms, timeouts, rejects)
-            if s is not None:
-                append_summary(args.summary, args.label, args.out, s, timeouts, rejects)
+            pass
+    s = summarize(lat_ms, timeouts, rejects)
+    if s is not None:
+        append_summary(args.summary, args.label, args.out, s, timeouts, rejects)
 
 
 if __name__ == "__main__":

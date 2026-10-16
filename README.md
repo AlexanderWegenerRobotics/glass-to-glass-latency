@@ -62,15 +62,15 @@ pip install -r requirements.txt
 python tools/log_latency.py COM3 runs/<run_name>/samples.csv --label "d455 30fps exp100 jb0" --summary runs/results_summary.csv
 ```
 
-Ctrl-C stops the run and prints n, median, p5, p95 and timeouts. The summary is also appended to `runs/results_summary.csv`, so runs with different settings end up in one table.
+The run stops by itself after 400 valid samples (change with `--samples`, `0` runs until Ctrl-C) and prints n, median, p5, p95 and timeouts. Ctrl-C also stops it early and still saves the summary. The summary is also appended to `runs/results_summary.csv`, so runs with different settings end up in one table.
 
 5. Plot it:
 
 ```bash
-python tools/make_plots.py runs/<run_name>/samples.csv --out runs/<run_name>/plots
+python tools/make_plots.py runs/<run_name>/samples.csv
 ```
 
-This writes a histogram, CDF and per-sample timeline, each as PNG and PDF (PDF for Keynote).
+This writes a histogram, CDF and per-sample timeline to `runs/<run_name>/plots/` (PNG and PDF, PDF for Keynote), and a one-row `runs/<run_name>/results.csv` with N, median, percentiles and timeouts.
 
 ### Output per run
 
@@ -78,6 +78,8 @@ This writes a histogram, CDF and per-sample timeline, each as PNG and PDF (PDF f
 |---|---|
 | `samples.csv` | `idx, latency_ms, host_time_s, rejected, timeout` per sample |
 | `samples.csv.log` | calibration values and Arduino messages with host time |
+| `results.csv` | label, N, median, p5/p25/p75/p95/p99, mean, sd, min, max, timeouts, duration |
+| `plots/` | histogram, CDF, timeline as PNG + PDF |
 | `notes.md` | camera, fps, exposure, encoder, jitter buffer, teleop commit. Write this, numbers without settings are useless later |
 
 ---
@@ -92,14 +94,25 @@ This writes a histogram, CDF and per-sample timeline, each as PNG and PDF (PDF f
 
 ---
 
-## Results so far
+## Results
+
+<img src="docs/latency_progress.png" width="560" alt="Glass-to-glass latency per stage of the work">
 
 | Run | Setup | N | Median | p5–p95 | Timeouts |
 |---|---|---|---|---|---|
-| `2026-09-25_run01_d455_30fps` | D455, 1280×722 @ 30 fps, auto-exposure, NVENC, localhost | 586 | 183 ms | 153–209 ms | 4.9 % |
-| `2026-09-25_run02_d435_30fps_jb50` | D435, 30 fps, jitter buffer 50 ms | 446 | 202 ms | 163–421 ms | 9.3 % |
+| `baseline` | D455 1280×720 @ 30 fps | 509 | 147.4 ms | 125–171 ms | 0.2 % |
+| `baseline_60fps` | D455 848×480 @ 60 fps | 400 | 105.7 ms | 88–122 ms | 0 % |
+| `60fps_jb50 novlog_rscallback` | 848×480 @ 60 fps, eye tracker off the Unreal game thread, fixed exposure 7.8 ms | 400 | 79.9 ms | 68–92 ms | 0.2 % |
 
-Both runs still had auto-exposure on, so treat them as a first look. Expected for this pipeline (GPU encode/decode, UE at 60 fps) is roughly 100–165 ms, so there is still an extra queue somewhere.
+Local loop on the Windows PC: D455 → NVENC H.264 → RTP over localhost → Unreal → Vive Pro Eye, mono view, jitter buffer 50 ms, video logging off. Every run is in `runs/results_summary.csv`.
+
+- Two changes carried the gain. Camera 30 → 60 fps (−42 ms, the camera delay is about two frames) and moving the Vive eye-tracker queries off the Unreal game thread, which brought Unreal from ~30 to ~72 fps (−25 ms, measured together with the switch to fixed exposure).
+- No measurable effect (≤ 1 ms each): BGRA input to the encoder, multithreaded colour conversion, texture upload on the render thread, jitter buffer 0 vs 50 ms on localhost, librealsense frame callback instead of `rs2::pipeline`.
+- Where the 80 ms go (estimate): ~46 ms camera, of which ~17 ms is one frame held by Windows Media Foundation; 4.5 ms encode, UDP and decode; 7.5 ms waiting for the next render frame; ~22 ms Unreal render, compositor and scanout.
+- On the robot the camera is read through V4L2 on Linux, so the Media Foundation frame does not exist there. Expected ~63 ms; not measured with this rig.
+- 848×480 costs about a third of the visible sharpness compared to 720p.
+
+The two runs from 2026-09-25 (`run01`, `run02`) still had auto-exposure on and were only a first look.
 
 ---
 

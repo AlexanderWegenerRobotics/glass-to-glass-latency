@@ -1,2 +1,13 @@
 date,label,raw_file,n,median_ms,p5_ms,p95_ms,mean_ms,stdev_ms,min_ms,max_ms,timeouts,rejects
 2026-09-25T19:26:23,d435 30fps jb50 auto-exp,runs/2026-09-25_run02_d435_30fps_jb50/samples.csv,446,201.9,163.1,421.2,235.7,104.8,148.0,885.0,46,0
+2026-10-15T22:34:25,d455 30fps exp100 jb0,runs/baseline/samples.csv,509,147.4,125.0,171.5,147.4,14.2,117.7,196.2,1,0
+2026-10-15T23:05:29,d455 30fps exp100 jb0,runs/baseline_60fps/samples.csv,400,105.7,87.8,121.6,105.6,10.3,80.3,128.6,0,0
+2026-10-15T23:24:55,d455 848x480@60 exp100 jb50 novlog,runs/baseline_60fps_nolog/samples.csv,400,105.8,90.1,122.4,105.8,10.0,83.2,133.1,1,0
+2026-10-15T23:34:20,d455 848x480@60 exp100 jb0 novlog,runs/60fps_jb0_novlog/samples.csv,305,107.4,90.6,126.1,107.9,10.9,81.9,143.4,5,0
+2026-10-16T00:19:19,d455 848x480@60 exp100 jb50 novlog bgraenc gpuconv rtupload,runs/60fps_jb50_novlog_gpupath/samples.csv,400,104.5,85.1,120.6,103.6,11.0,77.2,141.6,0,0
+2026-10-16T01:18:56,d455 848x480@60 exp100 jb50 novlog bgraenc mtconv rtupload noeyetracker,runs/60fps_jb50_novlog_noeyetracker/samples.csv,20,102.0,87.3,118.5,102.4,8.2,87.3,118.5,0,0
+2026-10-16T01:21:44,d455 848x480@60 exp100 jb50 novlog bgraenc mtconv rtupload noeyetracker,runs/60fps_jb50_novlog_noeyetracker/samples.csv,170,103.2,85.3,123.0,103.0,11.0,76.2,130.2,8,0
+2026-10-16T01:27:57,d455 848x480@60 exp100 jb50 novlog bgraenc mtconv rtupload noeyetracker,runs/60fps_jb50_novlog_noeyetracker/samples.csv,400,83.6,68.5,105.8,84.7,10.9,63.4,122.0,0,0
+2026-10-16T01:49:47,d455 848x480@60 exp100 jb50 novlog bgraenc mtconv rtupload noeyetracker,runs/test/samples.csv,50,81.3,71.4,95.9,82.5,7.5,64.6,98.8,0,0
+2026-10-16T01:58:52,d455 848x480@60 exp100 jb50 novlog bgraenc mtconv rtupload noeyetracker,runs/test/samples.csv,26,82.9,74.7,102.4,83.1,6.8,74.4,109.1,0,0
+2026-10-16T12:01:01,d455 848x480@60 exp78-fixed jb50 novlog bgraenc mtconv rtupload eyethread-v3 rscallback,runs/60fps_jb50 novlog_rscallback/samples.csv,400,79.9,68.2,91.8,80.1,9.1,61.6,171.6,1,1
